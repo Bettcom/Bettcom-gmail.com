@@ -1,32 +1,38 @@
-from flask import Flask, request, session
+from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'MMGHTY'
+load_dotenv()
 
-questions_and_answers = {
-    "Hello": "Hi! How can I assist you today?",
-    "Hi": "Hello! How can I help you?",
+greeting = ""
+questions = []
+with open("question.txt", "r") as f:
+    lines = f.readlines()
+    greeting = lines[0].strip()
+    questions = [line.strip() for line in lines[1:]]
+
+answers = {
     "1": "Answer to question 1...",
     "2": "Answer to question 2...",
     "3": "Answer to question 3...",
 }
 
 account_sid = os.getenv("TWILIO_ACCOUNT_SID")
-auth_token = os.getenv("TWILIO_AUTH_TOKEN") 
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
 client = Client(account_sid, auth_token)
 
 def sendMessage(body_mess, phone_number):
     print("BODY MESSAGE " + body_mess)
     message = client.messages.create(
-                                from_='whatsapp:+14155238886',                  
-                                body=body_mess,
-                                to='whatsapp:' + phone_number                   
-                            )
-    print(message)                                                              
-
+        from_='whatsapp:+14155238886',
+        body=body_mess,
+        to='whatsapp:' + phone_number
+    )
+    print(message)
 
 @app.route('/bot', methods=['POST'])
 def bot():
@@ -34,13 +40,16 @@ def bot():
     phone_number = (request.values['WaId'])
 
     response = MessagingResponse()
-    
-    if incoming_msg in questions_and_answers:
-        if incoming_msg in ["Hello", "Hi"]:
-            response.message(questions_and_answers[incoming_msg])
-        else:
-            response.message(questions_and_answers[incoming_msg])
-            sendMessage(questions_and_answers[incoming_msg], phone_number)
+
+    if incoming_msg == "Hello" or incoming_msg == "Hi":
+        all_questions = "\n".join(questions)
+        response.message(f"{greeting}\n\n{all_questions}\nPlease reply with the number of the question you want to ask.")
+    elif incoming_msg in [str(i + 1) for i in range(len(questions))]:
+        question_index = int(incoming_msg) - 1
+        response.message(answers.get(str(question_index + 1), "Sorry, I couldn't find an answer for that question."))
+    elif incoming_msg in answers:
+        response.message(answers[incoming_msg])
+        sendMessage(answers[incoming_msg], phone_number)
     else:
         response.message("I'm sorry, I didn't understand your message.")
 
