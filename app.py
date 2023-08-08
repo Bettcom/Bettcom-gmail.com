@@ -2,11 +2,9 @@ from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os
-from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'MMGHTY'
-load_dotenv() 
 
 questions_and_answers = {
     "Hello": "Hi! How can I assist you today?",
