@@ -2,10 +2,11 @@ from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'MMGHTY'  
-
+app.config['SECRET_KEY'] = 'MMGHTY'
+load_dotenv() 
 
 questions_and_answers = {
     "Hello": "Hi! How can I assist you today?",
@@ -15,9 +16,8 @@ questions_and_answers = {
     "3": "Answer to question 3...",
 }
 
-
-account_sid = 'AC905cac1de251ce34c52e50c0c68f02da'  
-auth_token = '7cd2a35853f4a39a527132547fc631a0'  
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN") 
 client = Client(account_sid, auth_token)
 
 def sendMessage(body_mess, phone_number):
