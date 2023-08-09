@@ -89,9 +89,6 @@ def bot():
         if incoming_msg == "Hello" or incoming_msg == "Hi":
             all_questions = "\n".join(questions)
         
-        # Make sure that user_name contains the actual user's name
-            print("User's Name:", user_name)  # Add this for debugging
-        
             personalized_greeting = greeting.replace("(name)", user_name)
             response.message(f"{personalized_greeting}\n{all_questions}")
         elif incoming_msg in [str(i + 1) for i in range(len(questions))]:
