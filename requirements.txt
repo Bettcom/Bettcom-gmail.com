@@ -1,1 +1,7 @@
-done
+requests==2.31.0
+twilio
+openai
+flask
+python-dotenv
+pymongo
+gunicorn>=20.1.0
