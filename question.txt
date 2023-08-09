@@ -1,4 +1,4 @@
-gretting: Hello! Here are a few things I can assist you with today!!!
+gretting: Hello (name), Here are a few things I can assist you with today?.
 
 1. What are your operating hours?
 2. How can I contact your customer service?
