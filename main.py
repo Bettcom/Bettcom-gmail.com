@@ -46,13 +46,16 @@ def sendMessage(body_mess, phone_number):
 
 # Function to generate a response using GPT-3
 def generate_gpt3_response(user_input):
-    prompt = f"User: {user_input}\nAI:"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=50
-    )
-    return response.choices[0].text.strip()
+    try:
+        prompt = f"User: {user_input}\nAI:"
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=50
+        )
+        return response.choices[0].text.strip()
+    except openai.error.OpenAIError:
+        return "Sorry, I couldn't generate a response at the moment."
 
 # Main route for handling incoming messages
 @app.route('/bot', methods=['POST'])
@@ -80,8 +83,11 @@ def bot():
     # Handle unknown inputs using GPT-3
     else:
         gpt3_response = generate_gpt3_response(incoming_msg)
-        response.message(gpt3_response)
-        sendMessage(gpt3_response, phone_number)
+        if gpt3_response == "Sorry, I couldn't generate a response at the moment.":
+            response.message(gpt3_response)
+        else:
+            response.message(gpt3_response)
+            sendMessage(gpt3_response, phone_number)
 
     return str(response)
 
