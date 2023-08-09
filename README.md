@@ -48,13 +48,27 @@ This is a simple WhatsApp chatbot built using Flask that responds to user messag
 
 ## Usage
 
-1. Run the Flask application:
+1. NGROK Local Deployment:
+
+   Now download ngrok
+
+    https://ngrok.com/download
+    Extract the zip and add the folder to the environment variables
+    Login to ngrok website: https://dashboard.ngrok.com/get-started/setup
+
+    run ngrok config add-authtoken in terminal
+    run ngrok http 5000
+    The output should be like
+    
+
+
+2. Run the Flask application:
 
    python main.py
 
    Your Flask app will be available at http://localhost:5000.
 
-2. Configuration
+3. Configuration
 
    - main.py: This is the main Flask application file that handles incoming WhatsApp messages, predefined questions, and GPT-3 integration.
 
